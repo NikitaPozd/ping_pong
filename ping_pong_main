@@ -38,6 +38,10 @@ win.fill(back)
 clock = time.Clock()
 FPS = 60
 game = True
+finish = False
+
+font.init()
+font_s = font.SysFont('Arial', 60)
 
 first_platform = Platform('platform.png', 10, 150, 2, 20, 200)
 second_platform = Platform('platform.png', 570, 150, 2, 20, 200)
@@ -47,23 +51,32 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-    if  ball.rect.y <= 0:
-        dy *= -1
-    if  ball.rect.y >= 435:
-        dy *= -1
-    if ball.rect.colliderect(first_platform.rect):
-        dx *= -1
-    if ball.rect.colliderect(second_platform.rect):
-        dx *= -1
-    ball.rect.y += dy
-    ball.rect.x += dx
-    win.fill(back)
-    key_pressed = key.get_pressed()
-    ball.reset()
-    first_platform.update_one()
-    first_platform.reset()
-    second_platform.reset()
-    second_platform.update_two()
+    if finish != True:
+        first_winner = font_s.render('Первый игрок выиграл', True, (255, 0, 0))
+        second_winner = font_s.render('Второй игрок выиграл', True, (255, 0, 0))
+        if  ball.rect.y <= 0:
+            dy *= -1
+        if  ball.rect.y >= 435:
+            dy *= -1
+        if ball.rect.colliderect(first_platform.rect):
+            dx *= -1
+        if ball.rect.colliderect(second_platform.rect):
+            dx *= -1
+        ball.rect.y += dy
+        ball.rect.x += dx
+        win.fill(back)
+        key_pressed = key.get_pressed()
+        ball.reset()
+        first_platform.update_one()
+        first_platform.reset()
+        second_platform.reset()
+        second_platform.update_two()
+    if ball.rect.x >= 535:
+        win.blit(first_winner, (30,220))
+        finish = True
+    if ball.rect.x <= 0:
+        finish = True
+        win.blit(second_winner, (50, 220))
     display.update()
     clock.tick(FPS)
 
