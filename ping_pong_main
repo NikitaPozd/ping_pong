@@ -1,4 +1,5 @@
 from pygame import *
+
 class GameSprite(sprite.Sprite):
    #конструктор класса
    def __init__(self, player_image, player_x, player_y, player_speed,s_long, s_wide):
@@ -12,25 +13,45 @@ class GameSprite(sprite.Sprite):
        self.rect.y = player_y
    def reset(self):
        win.blit(self.image, (self.rect.x, self.rect.y))
-white = (255, 255, 255)
+class Platform(GameSprite):
+    def update_one(self):
+        key_pressed = key.get_pressed()
+        if key_pressed[K_w] and self.rect.y >= 10:
+            self.rect.y-=self.speed
+        if key_pressed[K_s] and self.rect.y <= 290:
+            self.rect.y+=self.speed
+    def update_two(self):
+        key_pressed = key.get_pressed()
+        if key_pressed[K_UP] and self.rect.y >= 10:
+            self.rect.y-=self.speed
+        if key_pressed[K_DOWN] and self.rect.y <= 290:
+            self.rect.y+=self.speed
+back = (255, 255, 255)
 win_width = 600
 win_height = 500
-win = display.set_mode(win_width, win_height)
-win.fill(white)
+win = display.set_mode((win_width, win_height))
+win.fill(back)
 
 clock = time.Clock()
 FPS = 60
 game = True
 
-ball = GameSprite('ball.webp', 317, 395, 5, 100, 100)
-
-
+first_platform = Platform('platform.png', 10, 150, 2, 20, 200)
+second_platform = Platform('platform.png', 570, 150, 2, 20, 200)
+ball = GameSprite('ball.webp', 250, 200, 5, 65, 65)
 
 while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+    win.fill(back)
+    key_pressed = key.get_pressed()
     ball.reset()
+    first_platform.update_one()
+    first_platform.reset()
+    second_platform.reset()
+    second_platform.update_two()
     display.update()
     clock.tick(FPS)
+
 
