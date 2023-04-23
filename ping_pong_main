@@ -1,5 +1,6 @@
 from pygame import *
-
+dy = 3
+dx = 3
 class GameSprite(sprite.Sprite):
    #конструктор класса
    def __init__(self, player_image, player_x, player_y, player_speed,s_long, s_wide):
@@ -26,6 +27,8 @@ class Platform(GameSprite):
             self.rect.y-=self.speed
         if key_pressed[K_DOWN] and self.rect.y <= 290:
             self.rect.y+=self.speed
+
+
 back = (255, 255, 255)
 win_width = 600
 win_height = 500
@@ -44,6 +47,16 @@ while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
+    if  ball.rect.y <= 0:
+        dy *= -1
+    if  ball.rect.y >= 435:
+        dy *= -1
+    if ball.rect.colliderect(first_platform.rect):
+        dx *= -1
+    if ball.rect.colliderect(second_platform.rect):
+        dx *= -1
+    ball.rect.y += dy
+    ball.rect.x += dx
     win.fill(back)
     key_pressed = key.get_pressed()
     ball.reset()
